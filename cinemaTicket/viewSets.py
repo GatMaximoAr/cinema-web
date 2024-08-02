@@ -11,7 +11,7 @@ class CinemaRoomViewSet(viewsets.ModelViewSet):
         """
         Setter the permissions of specific request action.
         """
-        if self.action == 'list': 
+        if self.action == "list":
             permission_classes = [permissions.AllowAny]
         else:
             permission_classes = [permissions.IsAuthenticated]

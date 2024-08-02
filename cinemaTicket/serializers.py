@@ -5,4 +5,4 @@ from .models import CinemaRoom
 class CinemaRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = CinemaRoom
-        fields = ('id', 'name', 'capacity')
+        fields = ("id", "name", "capacity")

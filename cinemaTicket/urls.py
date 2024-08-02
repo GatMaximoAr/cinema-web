@@ -3,6 +3,6 @@ from .viewSets import CinemaRoomViewSet
 
 router = routers.DefaultRouter()
 
-router.register('api/cinema-room', CinemaRoomViewSet, 'room')
+router.register("api/cinema-room", CinemaRoomViewSet, "room")
 
 urlpatterns = router.urls

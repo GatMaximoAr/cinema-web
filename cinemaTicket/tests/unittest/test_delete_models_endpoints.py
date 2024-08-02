@@ -2,13 +2,12 @@ import pytest
 
 prefix = "/api/"
 
-pytestmark =  pytest.mark.parametrize("url", [
-    
-    pytest.param(
-        prefix + 'cinema-room/1/', 
-                id="delete_cinema_room"
-    ),
-])
+pytestmark = pytest.mark.parametrize(
+    "url",
+    [
+        pytest.param(prefix + "cinema-room/1/", id="delete_cinema_room"),
+    ],
+)
 
 
 @pytest.mark.django_db
@@ -21,7 +20,6 @@ def test_can_get_success_response(url, api_client_with_credentials, given_cinema
 @pytest.mark.django_db
 def test_can_not_found_record(url, api_client_with_credentials, given_cinema_rooms):
 
-    
     request = api_client_with_credentials.delete(path="/api/cinema-room/201/")
 
     assert request.status_code == 404
