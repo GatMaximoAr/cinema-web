@@ -1,7 +1,7 @@
 import pytest
 import uuid
 from rest_framework.test import APIClient
-from cinemaTicket.models import CinemaRoom
+from cinemaTicket.models import CinemaRoom, Projection
 
 
 @pytest.fixture
@@ -35,5 +35,17 @@ def api_client_with_credentials(db, create_user, api_client):
 
 @pytest.fixture
 def given_cinema_rooms(db):
-    room = CinemaRoom(name="B1", capacity=100)
-    room.save()
+    room1 = CinemaRoom(name="B1", capacity=100)
+    room2 = CinemaRoom(name="A1", capacity=100)
+    room1.save()
+    room2.save()
+
+
+@pytest.fixture
+def given_cinema_projection(db, given_cinema_rooms):
+    projection = Projection(projection_date="2024-08-4", start_time="12:51")
+    projection.save()
+
+    given_room = CinemaRoom.objects.get(pk=1)
+    projection.cinema_rooms.add(given_room)
+    projection.save()
