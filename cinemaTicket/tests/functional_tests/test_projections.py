@@ -19,8 +19,6 @@ def test_can_create_projection(api_client_with_credentials, given_cinema_rooms):
 
     response_data = response.data
 
-    # print(response)
-
     # Then the success respond should return the posted data
     assert response_data["projection_date"] == data["projection_date"]
 
@@ -55,6 +53,19 @@ def test_can_update_projection(api_client_with_credentials, given_cinema_project
         response_data["cinema_rooms"][0]["name"]
         == response_data["cinema_rooms"][0]["name"]
     )
+
+
+def test_cinema_rooms_can_be_null(api_client_with_credentials, given_cinema_projection):
+
+    data = {"projection_date": "2024-10-21", "start_time": "19:00", "cinema_rooms": []}
+
+    response = api_client_with_credentials.put(
+        path=url + "1/", data=data, format="json"
+    )
+
+    response_data = response.data
+
+    assert len(response_data["cinema_rooms"]) == 0
 
 
 @pytest.mark.django_db
