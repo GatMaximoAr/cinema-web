@@ -1,7 +1,10 @@
 import pytest
 import uuid
 from rest_framework.test import APIClient
-from cinemaTicket.models import CinemaRoom, Projection
+from cinemaTicket.models import *
+from io import BytesIO
+from PIL import Image
+from django.core.files.base import File
 
 
 @pytest.fixture
@@ -49,3 +52,21 @@ def given_cinema_projection(db, given_cinema_rooms):
     given_room = CinemaRoom.objects.get(pk=1)
     projection.cinema_rooms.add(given_room)
     projection.save()
+
+
+@pytest.fixture
+def test_image():
+    file_obj = BytesIO()
+    image = Image.new("RGB", size=(50, 50), color=(256, 0, 0))
+    image.save(file_obj, 'png')
+    file_obj.name = "test_image.png"
+    file_obj.seek(0)
+    return file_obj
+
+
+@pytest.fixture
+def given_cinema_movie(test_image):
+     
+    movie = Movie(name="deadpool & wolverine", 
+    description="some description")
+    movie.save()

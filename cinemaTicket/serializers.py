@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CinemaRoom, Projection
+from .models import *
 from django.core.exceptions import ObjectDoesNotExist
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
@@ -15,6 +15,15 @@ class ProjectionSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Projection
-        fields = ("id", "projection_date", "start_time", "created_at", "cinema_rooms")
+        fields = ("id", "projection_date", "start_time", "created_at", "cinema_rooms", "movie")
         read_only_fields = ("created_at",)
+        depth = 1
+
+
+class MovieSerializer(WritableNestedModelSerializer):
+    projections = ProjectionSerializer(many=True, required=False)
+
+    class Meta:
+        model = Movie
+        fields = ("id", "name", "description", "poster_image", "projections")
         depth = 1

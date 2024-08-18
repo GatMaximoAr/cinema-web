@@ -18,6 +18,7 @@ def test_can_create_projection(api_client_with_credentials, given_cinema_rooms):
     response = api_client_with_credentials.post(path=url, data=data, format="json")
 
     response_data = response.data
+    print(response_data)
 
     # Then the success respond should return the posted data
     assert response_data["projection_date"] == data["projection_date"]
