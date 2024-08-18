@@ -4,22 +4,27 @@ from django.core.exceptions import ObjectDoesNotExist
 
 url = "/api/movie/"
 
+
 @pytest.mark.django_db
 def test_can_create_cinema_movie(api_client_with_credentials, test_image):
 
     # Given an authorized user and new data
     movie_image = test_image
 
-    movie_data = {"name": "Deadpool & Wolverine", 
-                "description": "some movie description", 
-                "poster_image": movie_image}
+    movie_data = {
+        "name": "Deadpool & Wolverine",
+        "description": "some movie description",
+        "poster_image": movie_image,
+    }
 
     # When post to /api/movie/ endpoint witch data
 
-    response = api_client_with_credentials.post(path=url, data=movie_data, format="multipart")
+    response = api_client_with_credentials.post(
+        path=url, data=movie_data, format="multipart"
+    )
 
     # Then the server respond with success data
-    #print(response.data)
+    # print(response.data)
 
     response_data = response.data
 
@@ -42,9 +47,11 @@ def test_can_update_movie(api_client_with_credentials, given_cinema_movie, test_
 
     movie_image = test_image
 
-    movie_data = {"name": "wherever name", 
-                "description": "some movie description", 
-                "poster_image": movie_image}
+    movie_data = {
+        "name": "wherever name",
+        "description": "some movie description",
+        "poster_image": movie_image,
+    }
 
     response = api_client_with_credentials.put(
         path=url + "1/", data=movie_data, format="multipart"

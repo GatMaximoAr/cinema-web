@@ -15,7 +15,14 @@ class ProjectionSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Projection
-        fields = ("id", "projection_date", "start_time", "created_at", "cinema_rooms", "movie")
+        fields = (
+            "id",
+            "projection_date",
+            "start_time",
+            "created_at",
+            "cinema_rooms",
+            "movie",
+        )
         read_only_fields = ("created_at",)
         depth = 1
 

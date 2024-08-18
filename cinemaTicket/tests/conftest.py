@@ -58,7 +58,7 @@ def given_cinema_projection(db, given_cinema_rooms):
 def test_image():
     file_obj = BytesIO()
     image = Image.new("RGB", size=(50, 50), color=(256, 0, 0))
-    image.save(file_obj, 'png')
+    image.save(file_obj, "png")
     file_obj.name = "test_image.png"
     file_obj.seek(0)
     return file_obj
@@ -66,7 +66,6 @@ def test_image():
 
 @pytest.fixture
 def given_cinema_movie(test_image):
-     
-    movie = Movie(name="deadpool & wolverine", 
-    description="some description")
+
+    movie = Movie(name="deadpool & wolverine", description="some description")
     movie.save()
