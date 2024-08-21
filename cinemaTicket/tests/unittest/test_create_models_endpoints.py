@@ -13,9 +13,9 @@ pytestmark = pytest.mark.parametrize(
         pytest.param(
             prefix + "projection/",
             {
-                "projection_date": "2024-07-21",
-                "start_time": "16:30",
-                "cinema_rooms": [{"name": "B1", "capacity": 100}],
+                "projection_date": "2024-07-21 20:30",
+                "cinema_rooms": [{"id": 1, "name": "B1", "capacity": 100}],
+                "movie": 1,
             },
             id="create_projection",
         ),
@@ -25,7 +25,7 @@ pytestmark = pytest.mark.parametrize(
 
 @pytest.mark.django_db
 def test_can_get_success_response(
-    url, data, api_client_with_credentials, given_cinema_rooms
+    url, data, api_client_with_credentials, given_existing_data
 ):
 
     request = api_client_with_credentials.post(path=url, data=data, format="json")
@@ -34,7 +34,7 @@ def test_can_get_success_response(
 
 @pytest.mark.django_db
 def test_can_reject_malformed_request_body(
-    url, data, api_client_with_credentials, given_cinema_rooms
+    url, data, api_client_with_credentials, given_existing_data
 ):
 
     dirty_data = {"bad_data": 2, "pikachu": "some description"}
@@ -45,7 +45,7 @@ def test_can_reject_malformed_request_body(
 
 
 @pytest.mark.django_db
-def test_can_reject_unauthorized_request(url, data, api_client, given_cinema_rooms):
+def test_can_reject_unauthorized_request(url, data, api_client, given_existing_data):
 
     request = api_client.post(path=url, data=data, format="json")
 

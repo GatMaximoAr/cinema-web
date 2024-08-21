@@ -10,27 +10,23 @@ class CinemaRoomSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "capacity")
 
 
-class ProjectionSerializer(WritableNestedModelSerializer):
-    cinema_rooms = CinemaRoomSerializer(many=True, required=False)
-
-    class Meta:
-        model = Projection
-        fields = (
-            "id",
-            "projection_date",
-            "start_time",
-            "created_at",
-            "cinema_rooms",
-            "movie",
-        )
-        read_only_fields = ("created_at",)
-        depth = 1
-
-
 class MovieSerializer(WritableNestedModelSerializer):
-    projections = ProjectionSerializer(many=True, required=False)
 
     class Meta:
         model = Movie
-        fields = ("id", "name", "description", "poster_image", "projections")
+        fields = ("id", "name", "description", "poster_image")
+        depth = 1
+
+
+class ProjectionSerializer(WritableNestedModelSerializer):
+    cinema_rooms = CinemaRoomSerializer(many=True, required=False)
+    movie = serializers.PrimaryKeyRelatedField(
+        required=True, queryset=Movie.objects.all()
+    )
+    projection_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M")
+
+    class Meta:
+        model = Projection
+        fields = "__all__"
+        read_only_fields = ("created_at",)
         depth = 1

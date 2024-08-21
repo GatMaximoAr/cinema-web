@@ -6,19 +6,19 @@ url = "/api/projection/"
 
 
 @pytest.mark.django_db
-def test_can_create_projection(api_client_with_credentials, given_cinema_rooms):
+def test_can_create_projection(api_client_with_credentials, given_existing_data):
     # Given a authenticated user and existen cinema rooms in database
 
     # When make a post to the /api/projection/ endpoint when some valid data
     data = {
-        "projection_date": "2024-07-21",
-        "start_time": "16:30",
-        "cinema_rooms": [{"name": "B1", "capacity": 100}],
+        "projection_date": "2024-07-21 16:30",
+        "cinema_rooms": [{"id": 1, "name": "B1", "capacity": 100}],
+        "movie": 1,
     }
     response = api_client_with_credentials.post(path=url, data=data, format="json")
 
     response_data = response.data
-    print(response_data)
+    # print(response_data)
 
     # Then the success respond should return the posted data
     assert response_data["projection_date"] == data["projection_date"]
@@ -36,12 +36,12 @@ def test_can_get_projections(api_client_with_credentials, given_cinema_projectio
 
 
 @pytest.mark.django_db
-def test_can_update_projection(api_client_with_credentials, given_cinema_projection):
+def test_can_update_projection(api_client_with_credentials, given_existing_data):
 
     data = {
-        "projection_date": "2024-10-21",
-        "start_time": "19:00",
+        "projection_date": "2024-08-04 12:51",
         "cinema_rooms": [{"name": "A1", "capacity": 100}],
+        "movie": 1,
     }
     response = api_client_with_credentials.put(
         path=url + "1/", data=data, format="json"
@@ -56,15 +56,16 @@ def test_can_update_projection(api_client_with_credentials, given_cinema_project
     )
 
 
-def test_cinema_rooms_can_be_null(api_client_with_credentials, given_cinema_projection):
+def test_cinema_rooms_can_be_null(api_client_with_credentials, given_existing_data):
 
-    data = {"projection_date": "2024-10-21", "start_time": "19:00", "cinema_rooms": []}
+    data = {"projection_date": "2024-10-04 12:51", "cinema_rooms": [], "movie": 1}
 
     response = api_client_with_credentials.put(
         path=url + "1/", data=data, format="json"
     )
 
     response_data = response.data
+    # print(response_data)
 
     assert len(response_data["cinema_rooms"]) == 0
 
