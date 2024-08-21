@@ -46,7 +46,7 @@ def given_cinema_rooms(db):
 
 @pytest.fixture
 def given_cinema_projection(db, given_cinema_rooms):
-    projection = Projection(projection_date="2024-08-4", start_time="12:51")
+    projection = Projection(projection_date="2024-08-04:12:51")
     projection.save()
 
     given_room = CinemaRoom.objects.get(pk=1)
@@ -69,3 +69,10 @@ def given_cinema_movie(test_image):
 
     movie = Movie(name="deadpool & wolverine", description="some description")
     movie.save()
+
+
+@pytest.fixture
+def given_existing_data(
+    given_cinema_rooms, given_cinema_projection, given_cinema_movie
+):
+    pass
