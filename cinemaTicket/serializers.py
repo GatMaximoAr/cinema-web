@@ -30,3 +30,14 @@ class ProjectionSerializer(WritableNestedModelSerializer):
         fields = "__all__"
         read_only_fields = ("created_at",)
         depth = 1
+
+
+class TicketSerializer(WritableNestedModelSerializer):
+    projection = serializers.PrimaryKeyRelatedField(
+        required=True, queryset=Projection.objects.all()
+    )
+
+    class Meta:
+        model = Ticket
+        fields = "__all__"
+        depth = 1
