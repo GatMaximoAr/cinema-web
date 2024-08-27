@@ -56,6 +56,7 @@ def test_can_update_projection(api_client_with_credentials, given_existing_data)
     )
 
 
+@pytest.mark.django_db
 def test_cinema_rooms_can_be_null(api_client_with_credentials, given_existing_data):
 
     data = {"projection_date": "2024-10-04 12:51", "cinema_rooms": [], "movie": 1}

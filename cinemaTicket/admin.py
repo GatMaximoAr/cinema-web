@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(CinemaRoom)
 admin.site.register(Projection)
 admin.site.register(Movie)
+admin.site.register(Ticket)
