@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import *
+from cinemaTicket.models import *
 from django.core.exceptions import ObjectDoesNotExist
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
@@ -7,14 +7,14 @@ from drf_writable_nested.serializers import WritableNestedModelSerializer
 class CinemaRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = CinemaRoom
-        fields = ("id", "name", "capacity")
+        fields = "__all__"
 
 
 class MovieSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ("id", "name", "description", "poster_image")
+        fields = "__all__"
         depth = 1
 
 

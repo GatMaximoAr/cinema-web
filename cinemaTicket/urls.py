@@ -1,5 +1,5 @@
 from rest_framework import routers
-from .viewSets import *
+from .api.viewSets import *
 
 router = routers.DefaultRouter()
 
