@@ -21,7 +21,7 @@ class Movie(models.Model):
 
 class Projection(models.Model):
     projection_date = models.DateTimeField()
-    cinema_rooms = models.ManyToManyField(CinemaRoom)
+    cinema_room = models.ForeignKey(CinemaRoom, on_delete=models.SET_NULL, null=True)
     created_at = models.DateField(default=date.today)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
