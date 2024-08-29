@@ -62,3 +62,19 @@ def test_can_delete_ticket(api_client_with_credentials, given_cinema_projection)
 
     except ObjectDoesNotExist:
         assert True
+
+
+@pytest.mark.django_db
+def test_limit_available_tickets(api_client, given_sold_out_projection):
+
+    data = {
+        "customer_name": "test customer",
+        "email": "test@email.com",
+        "projection": 1,
+    }
+    response = api_client.post(path=url, data=data, format="json")
+
+    response_data = response.data
+    print(response_data)
+
+    assert response.status_code == 400

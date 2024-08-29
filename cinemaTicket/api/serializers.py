@@ -19,10 +19,14 @@ class MovieSerializer(WritableNestedModelSerializer):
 
 
 class ProjectionSerializer(WritableNestedModelSerializer):
-    cinema_rooms = CinemaRoomSerializer(many=True, required=False)
+    cinema_room = serializers.PrimaryKeyRelatedField(
+        required=True, queryset=CinemaRoom.objects.all()
+    )
+
     movie = serializers.PrimaryKeyRelatedField(
         required=True, queryset=Movie.objects.all()
     )
+
     projection_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M")
 
     class Meta:
@@ -41,3 +45,14 @@ class TicketSerializer(WritableNestedModelSerializer):
         model = Ticket
         fields = "__all__"
         depth = 1
+
+    def validate(self, attrs):
+        room_capacity = attrs["projection"].cinema_room.capacity
+        tickets_spended = Ticket.objects.filter(projection=attrs["projection"]).count()
+        print(room_capacity)
+        print(tickets_spended)
+
+        if tickets_spended < room_capacity:
+            return attrs
+        else:
+            raise serializers.ValidationError("the current projection is soul out")

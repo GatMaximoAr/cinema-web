@@ -39,7 +39,7 @@ def api_client_with_credentials(db, create_user, api_client):
 @pytest.fixture
 def given_cinema_rooms(db):
     room1 = CinemaRoom(name="B1", capacity=100)
-    room2 = CinemaRoom(name="A1", capacity=100)
+    room2 = CinemaRoom(name="A1", capacity=1)
     room1.save()
     room2.save()
 
@@ -47,11 +47,10 @@ def given_cinema_rooms(db):
 @pytest.fixture
 def given_cinema_projection(db, given_cinema_rooms, given_cinema_movie):
     movie = Movie.objects.get(pk=1)
-    projection = Projection(projection_date="2024-08-04:12:51", movie=movie)
-    projection.save()
-
     given_room = CinemaRoom.objects.get(pk=1)
-    projection.cinema_rooms.add(given_room)
+    projection = Projection(
+        projection_date="2024-08-04:12:51", movie=movie, cinema_room=given_room
+    )
     projection.save()
 
 
@@ -77,6 +76,22 @@ def given_existing_data(
     given_cinema_rooms, given_cinema_projection, given_cinema_movie
 ):
     projection = Projection.objects.get(pk=1)
+
+    ticket = Ticket(
+        customer_name="test customer", email="test@email.com", projection=projection
+    )
+    ticket.save()
+
+
+@pytest.fixture
+def given_sold_out_projection(given_cinema_movie, given_cinema_rooms):
+
+    movie = Movie.objects.get(pk=1)
+    given_room = CinemaRoom.objects.get(pk=2)
+    projection = Projection(
+        projection_date="2024-08-04:12:51", movie=movie, cinema_room=given_room
+    )
+    projection.save()
 
     ticket = Ticket(
         customer_name="test customer", email="test@email.com", projection=projection
