@@ -30,6 +30,17 @@ class Projection(models.Model):
         movie: {self.movie.name}"
 
 
+class ValidEmail(models.Model):
+    email = models.EmailField(unique=True)
+    otp_code = models.CharField(max_length=6)
+    otp_created_at = models.DateTimeField(auto_now_add=True)
+    otp_expires_at = models.DateTimeField(blank=True, null=True)
+    is_verified = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return f"email: {self.email}, is verifeid: {self.is_verified}"
+
+
 class Ticket(models.Model):
     customer_name = models.CharField(max_length=50)
     email = models.EmailField()

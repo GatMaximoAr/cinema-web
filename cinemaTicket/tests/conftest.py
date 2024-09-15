@@ -4,7 +4,8 @@ from rest_framework.test import APIClient
 from cinemaTicket.models import *
 from io import BytesIO
 from PIL import Image
-from django.core.files.base import File
+from django.utils import timezone
+from cinemaTicket.utils import generate_otp
 
 
 @pytest.fixture
@@ -82,6 +83,15 @@ def given_existing_data(
     )
     ticket.save()
 
+    expires_ = timezone.now() - timezone.timedelta(minutes=5)
+    test_email = ValidEmail(
+        email="testemail@gmail.com",
+        is_verified=False,
+        otp_code=generate_otp(),
+        otp_expires_at=expires_,
+    )
+    test_email.save()
+
 
 @pytest.fixture
 def given_sold_out_projection(given_cinema_movie, given_cinema_rooms):
@@ -97,3 +107,15 @@ def given_sold_out_projection(given_cinema_movie, given_cinema_rooms):
         customer_name="test customer", email="test@email.com", projection=projection
     )
     ticket.save()
+
+
+@pytest.fixture
+def given_exiting_email():
+    expires_ = timezone.now() - timezone.timedelta(minutes=5)
+    test_email = ValidEmail(
+        email="testemail@gmail.com",
+        is_verified=False,
+        otp_code=generate_otp(),
+        otp_expires_at=expires_,
+    )
+    test_email.save()
