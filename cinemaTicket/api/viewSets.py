@@ -5,6 +5,7 @@ from .serializers import *
 from django.utils import timezone
 import secrets
 from django.core.mail import send_mail
+from cinemaTicket.utils import send_email_template, generate_qr_code_base64
 
 
 class CinemaRoomViewSet(viewsets.ModelViewSet):
@@ -66,6 +67,31 @@ class TicketViewSet(viewsets.ModelViewSet):
             permission_classes = [permissions.IsAuthenticated]
         return [permission() for permission in permission_classes]
 
+    def create(self, request, *args, **kwargs):
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        self.perform_create(serializer)
+        print(serializer.data)
+
+        qr_code = generate_qr_code_base64(str(serializer.data["id"]))
+
+        ctx = {"qr_code": qr_code, "ticket_id": serializer.data["id"]}
+
+        send_email_template(
+            ctx=ctx,
+            template="cinemaTicket/ticket_template.html",
+            receivers=["test@email.org"],
+            email_subject="ticket sended",
+        )
+
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
+
 
 class ValidEmailViewSet(viewsets.ModelViewSet):
     queryset = ValidEmail.objects.all()
@@ -83,21 +109,15 @@ class ValidEmailViewSet(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def create(self, request, *args, **kwargs):
-        # Clona los datos de la solicitud original
         data = request.data.copy()
 
-        # Modifica los datos según sea necesario
-        data["otp_expires_at"] = timezone.now() + timezone.timedelta(
-            minutes=5
-        )  # Ejemplo de un campo adicional
+        data["otp_expires_at"] = timezone.now() + timezone.timedelta(minutes=5)
         data["otp_code"] = secrets.token_hex(3)
         # print("otp code: " + data['otp_code'])
 
-        # Instancia el serializer con los datos modificados
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
 
-        # Si la validación es exitosa, guarda el objeto
         self.perform_create(serializer)
 
         send_mail(
@@ -108,7 +128,6 @@ class ValidEmailViewSet(viewsets.ModelViewSet):
             fail_silently=False,
         )
 
-        # Prepara la respuesta con los datos del objeto creado
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
