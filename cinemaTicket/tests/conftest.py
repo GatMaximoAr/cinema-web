@@ -73,28 +73,47 @@ def given_cinema_movie(test_image):
 
 
 @pytest.fixture
-def given_existing_data(
-    given_cinema_rooms, given_cinema_projection, given_cinema_movie
-):
-    projection = Projection.objects.get(pk=1)
-
-    ticket = Ticket(
-        customer_name="test customer", email="test@email.com", projection=projection
-    )
-    ticket.save()
-
+def given_exiting_email():
     expires_ = timezone.now() - timezone.timedelta(minutes=5)
     test_email = ValidEmail(
-        email="testemail@gmail.com",
-        is_verified=False,
+        email="testemail@email.org",
+        is_verified=True,
         otp_code=generate_otp(),
         otp_expires_at=expires_,
     )
     test_email.save()
 
+    test_email1 = ValidEmail(
+        email="test@email.org",
+        is_verified=False,
+        otp_code=generate_otp(),
+        otp_expires_at=expires_,
+    )
+    test_email1.save()
+
 
 @pytest.fixture
-def given_sold_out_projection(given_cinema_movie, given_cinema_rooms):
+def given_existing_data(
+    given_cinema_rooms,
+    given_cinema_projection,
+    given_cinema_movie,
+    given_exiting_email,
+):
+
+    email = ValidEmail.objects.get(pk=1)
+
+    projection = Projection.objects.get(pk=1)
+
+    ticket = Ticket(customer_name="test customer", email=email, projection=projection)
+    ticket.save()
+
+
+@pytest.fixture
+def given_sold_out_projection(
+    given_cinema_movie, given_cinema_rooms, given_exiting_email
+):
+
+    email = ValidEmail.objects.get(pk=1)
 
     movie = Movie.objects.get(pk=1)
     given_room = CinemaRoom.objects.get(pk=2)
@@ -103,19 +122,5 @@ def given_sold_out_projection(given_cinema_movie, given_cinema_rooms):
     )
     projection.save()
 
-    ticket = Ticket(
-        customer_name="test customer", email="test@email.com", projection=projection
-    )
+    ticket = Ticket(customer_name="test customer", email=email, projection=projection)
     ticket.save()
-
-
-@pytest.fixture
-def given_exiting_email():
-    expires_ = timezone.now() - timezone.timedelta(minutes=5)
-    test_email = ValidEmail(
-        email="testemail@gmail.com",
-        is_verified=False,
-        otp_code=generate_otp(),
-        otp_expires_at=expires_,
-    )
-    test_email.save()

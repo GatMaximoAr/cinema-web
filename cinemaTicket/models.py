@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+from cinemaTicket.utils import generate_otp
 
 
 class CinemaRoom(models.Model):
@@ -43,9 +44,10 @@ class ValidEmail(models.Model):
 
 class Ticket(models.Model):
     customer_name = models.CharField(max_length=50)
-    email = models.EmailField()
+    email = models.ForeignKey(ValidEmail, on_delete=models.CASCADE)
     projection = models.ForeignKey(Projection, on_delete=models.CASCADE)
     is_validated = models.BooleanField(default=False)
+    validate_code = models.CharField(max_length=6, default=generate_otp())
 
     def __str__(self):
         return f"id: {self.pk}, \

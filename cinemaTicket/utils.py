@@ -3,7 +3,6 @@ from io import BytesIO
 import secrets
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 import qrcode
 
 
@@ -14,11 +13,10 @@ def generate_otp():
 def send_email_template(ctx: dict, template: str, receivers: list, email_subject: str):
 
     convert_to_html_content = render_to_string(template_name=template, context=ctx)
-    plain_message = strip_tags(convert_to_html_content)
 
     send_mail(
         subject=email_subject,
-        message=plain_message,
+        message="",
         from_email="web@mail.org",
         recipient_list=receivers,
         html_message=convert_to_html_content,

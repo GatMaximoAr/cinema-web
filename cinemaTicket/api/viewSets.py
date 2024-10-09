@@ -3,9 +3,13 @@ from rest_framework.response import Response
 from cinemaTicket.models import *
 from .serializers import *
 from django.utils import timezone
-import secrets
 from django.core.mail import send_mail
-from cinemaTicket.utils import send_email_template, generate_qr_code_base64
+from cinemaTicket.utils import (
+    send_email_template,
+    generate_qr_code_base64,
+    generate_otp,
+)
+from django.shortcuts import render, get_object_or_404
 
 
 class CinemaRoomViewSet(viewsets.ModelViewSet):
@@ -56,6 +60,7 @@ class MovieViewSet(viewsets.ModelViewSet):
 class TicketViewSet(viewsets.ModelViewSet):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
+    http_method_names = ["get", "post", "delete"]
 
     def get_permissions(self):
         """
@@ -73,9 +78,13 @@ class TicketViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
 
         self.perform_create(serializer)
-        print(serializer.data)
+        # print(serializer.data)
 
-        qr_code = generate_qr_code_base64(str(serializer.data["id"]))
+        qr_content = (
+            f"localhost:8000/api/ticket/{str(serializer.data["validate_code"])}/"
+        )
+        # print(qr_content)
+        qr_code = generate_qr_code_base64(qr_content)
 
         ctx = {"qr_code": qr_code, "ticket_id": serializer.data["id"]}
 
@@ -91,6 +100,13 @@ class TicketViewSet(viewsets.ModelViewSet):
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
+
+    def retrieve(self, request, secret_key=None):
+
+        if secret_key:
+            ticket = get_object_or_404(Ticket, validate_code=secret_key)
+
+            return render(request, "cinemaTicket/mi_template.html", {"ctx": ticket})
 
 
 class ValidEmailViewSet(viewsets.ModelViewSet):
@@ -112,7 +128,7 @@ class ValidEmailViewSet(viewsets.ModelViewSet):
         data = request.data.copy()
 
         data["otp_expires_at"] = timezone.now() + timezone.timedelta(minutes=5)
-        data["otp_code"] = secrets.token_hex(3)
+        data["otp_code"] = generate_otp()
         # print("otp code: " + data['otp_code'])
 
         serializer = self.get_serializer(data=data)
