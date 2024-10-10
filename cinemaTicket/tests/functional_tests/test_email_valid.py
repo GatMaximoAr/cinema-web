@@ -59,7 +59,7 @@ def test_can_delete_email(api_client_with_credentials):
 @pytest.mark.django_db
 def test_can_send_mail_on_create(api_client):
 
-    data = {"email": "testemail@gmail.com"}
+    data = {"email": "testemail@email.org"}
 
     response = api_client.post(path=url, data=data, format="json")
 
@@ -160,7 +160,7 @@ def test_can_reject_if_is_otp_expired(api_client):
 @pytest.mark.django_db
 def test_can_send_mail_on_refresh_otp(api_client, given_exiting_email):
 
-    data = {"email": "testemail@gmail.com"}
+    data = {"email": "test@email.org"}
 
     response = api_client.post(path="/api/refresh-otp/", data=data, format="json")
 

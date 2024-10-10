@@ -9,12 +9,12 @@ pytestmark = pytest.mark.parametrize(
             prefix + "ticket/",
             {
                 "customer_name": "test customer",
-                "email": "test@email.com",
+                "email": "testemail@email.org",
                 "projection": 1,
             },
             id="ticket",
         ),
-        pytest.param(prefix + "email/", {"email": "testemail@mail.org"}, id="email"),
+        pytest.param(prefix + "email/", {"email": "test1@email.org"}, id="email"),
     ],
 )
 

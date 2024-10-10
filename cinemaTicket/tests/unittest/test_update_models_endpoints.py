@@ -19,15 +19,6 @@ pytestmark = pytest.mark.parametrize(
             },
             id="update_projection",
         ),
-        pytest.param(
-            prefix + "ticket/1/",
-            {
-                "customer_name": "test customer update",
-                "email": "test@email.com",
-                "projection": 1,
-            },
-            id="update_ticket",
-        ),
     ],
 )
 

@@ -14,4 +14,9 @@ router.register("api/email", ValidEmailViewSet, "email")
 urlpatterns = [
     path("api/email-verify/", views.validate_email),
     path("api/refresh-otp/", views.refresh_otp),
+    path(
+        "api/ticket/validate/<str:secret_key>/",
+        TicketViewSet.as_view({"get": "retrieve"}),
+        name="verify_ticket",
+    ),
 ] + router.urls

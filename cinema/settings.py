@@ -56,7 +56,7 @@ ROOT_URLCONF = "cinema.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [Path.joinpath(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -127,13 +127,13 @@ MEDIA_ROOT = Path.joinpath(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Email Settings
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'localhost'  # Si estás usando Mailcrab con Docker
-# EMAIL_PORT = 1025  # El puerto que usa Mailcrab
-# EMAIL_USE_TLS = False
-# EMAIL_USE_SSL = False
-# EMAIL_HOST_USER = ''  # Si no requiere autenticación
-# EMAIL_HOST_PASSWORD = ''
-# DEFAULT_FROM_EMAIL = 'webmaster@localhost'
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# Email Settingshttps://www.thunderclient.com/welcome
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "localhost"  # Si estás usando Mailcrab con Docker
+EMAIL_PORT = 1025  # El puerto que usa Mailcrab
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = ""  # Si no requiere autenticación
+EMAIL_HOST_PASSWORD = ""
+DEFAULT_FROM_EMAIL = "webmaster@localhost"
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
