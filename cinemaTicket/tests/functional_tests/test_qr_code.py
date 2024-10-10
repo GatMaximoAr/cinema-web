@@ -12,9 +12,9 @@ def test_email_contains_qr_base64_image():
 
     send_email_template(
         ctx=ctx,
-        template="cinemaTicket/ticket_template.html",
+        template="cinemaTicket/ticket-template.html",
         receivers=["test@email.org"],
-        email_subject="ticket sended",
+        email_subject="Your One-Time Password for Validation",
     )
 
     assert len(mail.outbox) == 1

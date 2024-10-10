@@ -64,7 +64,7 @@ def test_can_send_mail_on_create(api_client):
     response = api_client.post(path=url, data=data, format="json")
 
     assert len(mail.outbox) == 1
-    assert mail.outbox[0].subject == "verify email"
+    assert mail.outbox[0].subject == "Your One-Time Password for Validation"
 
 
 @pytest.mark.django_db
@@ -165,7 +165,7 @@ def test_can_send_mail_on_refresh_otp(api_client, given_exiting_email):
     response = api_client.post(path="/api/refresh-otp/", data=data, format="json")
 
     assert len(mail.outbox) == 1
-    assert mail.outbox[0].subject == "verify email"
+    assert mail.outbox[0].subject == "Your One-Time Password for Validation"
 
     assert response.status_code == 200
 

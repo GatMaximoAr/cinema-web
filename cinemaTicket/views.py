@@ -4,8 +4,7 @@ from rest_framework.response import Response
 from .models import ValidEmail
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
-from .utils import generate_otp
-from django.core.mail import send_mail
+from .utils import generate_otp, send_email_template
 
 
 @api_view(["POST"])
@@ -69,12 +68,11 @@ def refresh_otp(request):
             db_email.otp_expires_at = timezone.now() + timezone.timedelta(minutes=5)
             db_email.save()
 
-            send_mail(
-                "verify email",
-                f"Here is the otp: {db_email.otp_code}.",
-                "from@example.com",
-                ["to@example.com"],
-                fail_silently=False,
+            send_email_template(
+                ctx={"otp_code": db_email.otp_code},
+                template="cinemaTicket/validate-email.html",
+                email_subject="Your One-Time Password for Validation",
+                receivers=[db_email.email],
             )
 
             return Response(

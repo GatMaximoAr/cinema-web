@@ -86,11 +86,18 @@ class TicketViewSet(viewsets.ModelViewSet):
         # print(qr_content)
         qr_code = generate_qr_code_base64(qr_content)
 
-        ctx = {"qr_code": qr_code, "ticket_id": serializer.data["id"]}
+        projection = Projection.objects.get(pk=serializer.data["projection"])
+
+        ctx = {
+            "qr_code": qr_code,
+            "ticket": serializer.data,
+            "movie": projection.movie.name,
+            "projection": projection,
+        }
 
         send_email_template(
             ctx=ctx,
-            template="cinemaTicket/ticket_template.html",
+            template="cinemaTicket/ticket-template.html",
             receivers=["test@email.org"],
             email_subject="ticket sended",
         )
@@ -105,8 +112,17 @@ class TicketViewSet(viewsets.ModelViewSet):
 
         if secret_key:
             ticket = get_object_or_404(Ticket, validate_code=secret_key)
+            if ticket:
+                expires = False
+                if ticket.projection.projection_date < timezone.now():
+                    expires = True
+            print(expires)
 
-            return render(request, "cinemaTicket/mi_template.html", {"ctx": ticket})
+            return render(
+                request,
+                "cinemaTicket/validate-ticket.html",
+                {"ctx": ticket, "expires": expires},
+            )
 
 
 class ValidEmailViewSet(viewsets.ModelViewSet):
@@ -136,12 +152,11 @@ class ValidEmailViewSet(viewsets.ModelViewSet):
 
         self.perform_create(serializer)
 
-        send_mail(
-            "verify email",
-            f"Here is the otp: {data["otp_code"]}.",
-            "from@example.com",
-            ["to@example.com"],
-            fail_silently=False,
+        send_email_template(
+            ctx={"otp_code": data["otp_code"]},
+            template="cinemaTicket/validate-email.html",
+            email_subject="Your One-Time Password for Validation",
+            receivers=[serializer.data["email"]],
         )
 
         headers = self.get_success_headers(serializer.data)
