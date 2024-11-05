@@ -102,13 +102,13 @@ def test_can_send_ticket_by_email_on_create(
 
 
 def test_can_retrieve_ticket_on_validate_page(
-    api_client_with_credentials, given_existing_data
+    ticker_verifier, given_existing_data
 ):
 
     ticket = Ticket.objects.get(pk=1)
     # print(ticket)
 
-    response = api_client_with_credentials.get(
+    response = ticker_verifier.get(
         path=f"/api/ticket/validate/{ticket.validate_code}/"
     )
 
@@ -116,9 +116,9 @@ def test_can_retrieve_ticket_on_validate_page(
 
 
 def test_can_not_found_ticket_on_validate_page(
-    api_client, api_client_with_credentials, given_existing_data
+    api_client, ticker_verifier, given_existing_data
 ):
 
-    response = api_client_with_credentials.get(path="/api/ticket/validate/2211/")
+    response = ticker_verifier.get(path="/api/ticket/validate/2211/")
 
     assert response.status_code == 404

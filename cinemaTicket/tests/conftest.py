@@ -6,6 +6,8 @@ from io import BytesIO
 from PIL import Image
 from django.utils import timezone
 from cinemaTicket.utils import generate_otp
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, Permission
 
 
 @pytest.fixture
@@ -124,3 +126,15 @@ def given_sold_out_projection(
 
     ticket = Ticket(customer_name="test customer", email=email, projection=projection)
     ticket.save()
+
+
+@pytest.fixture
+def ticker_verifier(db, api_client):
+    new_group = Group.objects.get_or_create(name='verified_ticket') 
+    user = User.objects.create(username="jhon", password="some-strong-pass")
+    user.save()
+    user.groups.set(new_group)
+    user.save()
+    api_client.force_authenticate(user=user)
+    yield api_client
+    api_client.force_authenticate(user=None)

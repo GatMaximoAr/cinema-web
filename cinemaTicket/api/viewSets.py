@@ -4,12 +4,14 @@ from cinemaTicket.models import *
 from .serializers import *
 from django.utils import timezone
 from django.core.mail import send_mail
-from cinemaTicket.utils import (
-    send_email_template,
-    generate_qr_code_base64,
-    generate_otp,
-)
+from cinemaTicket.utils import *
 from django.shortcuts import render, get_object_or_404
+from rest_framework.permissions import BasePermission
+
+class verifiedTicket(BasePermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.groups.filter(name='verified_ticket').exists()
+
 
 
 class CinemaRoomViewSet(viewsets.ModelViewSet):
@@ -68,6 +70,9 @@ class TicketViewSet(viewsets.ModelViewSet):
         """
         if self.action == "create":
             permission_classes = [permissions.AllowAny]
+        elif self.action == "retrieve":
+            permission_classes = [verifiedTicket]
+
         else:
             permission_classes = [permissions.IsAuthenticated]
         return [permission() for permission in permission_classes]
