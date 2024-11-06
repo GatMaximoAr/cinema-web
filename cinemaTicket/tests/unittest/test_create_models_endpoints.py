@@ -14,7 +14,7 @@ pytestmark = pytest.mark.parametrize(
             prefix + "projection/",
             {
                 "projection_date": "2024-07-21 20:30",
-                "cinema_rooms": [{"id": 1, "name": "B1", "capacity": 100}],
+                "cinema_room": 1,
                 "movie": 1,
             },
             id="create_projection",

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Validate ticket {{ctx.id}}</h1>
+
+    <div>
+        <p><strong>custumer:</strong> {{ctx.customer_name}}</p>
+        <p><strong>projection date:</strong> {{ctx.projection.projection_date}}</p>
+        <p><strong>movie:</strong> {{ctx.projection.movie.name}}</p>
+        {% if expires %}
+            <p><strong>Is valid:</strong> False the ticket is expired</p>
+        
+        {% else %}
+            <p><strong>Is valid:</strong> {{ticket.is_validated}}</p>
+        {% endif %}
+        
+    </div>
+{% endblock %}

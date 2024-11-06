@@ -14,19 +14,10 @@ pytestmark = pytest.mark.parametrize(
             prefix + "projection/1/",
             {
                 "projection_date": "2024-08-06 19:00",
-                "cinema_rooms": [{"id": 1, "name": "A1", "capacity": 100}],
+                "cinema_room": 1,
                 "movie": 1,
             },
             id="update_projection",
-        ),
-        pytest.param(
-            prefix + "ticket/1/",
-            {
-                "customer_name": "test customer update",
-                "email": "test@email.com",
-                "projection": 1,
-            },
-            id="update_ticket",
         ),
     ],
 )

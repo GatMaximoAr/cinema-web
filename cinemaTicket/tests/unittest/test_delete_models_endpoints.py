@@ -9,6 +9,7 @@ pytestmark = pytest.mark.parametrize(
         pytest.param(prefix + "projection/", id="delete_projection"),
         pytest.param(prefix + "movie/", id="delete_movie"),
         pytest.param(prefix + "ticket/", id="delete_ticket"),
+        pytest.param(prefix + "email/", id="delete_email"),
     ],
 )
 

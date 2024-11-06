@@ -12,7 +12,7 @@ def test_can_create_projection(api_client_with_credentials, given_existing_data)
     # When make a post to the /api/projection/ endpoint when some valid data
     data = {
         "projection_date": "2024-07-21 16:30",
-        "cinema_rooms": [{"id": 1, "name": "B1", "capacity": 100}],
+        "cinema_room": 1,
         "movie": 1,
     }
     response = api_client_with_credentials.post(path=url, data=data, format="json")
@@ -40,7 +40,7 @@ def test_can_update_projection(api_client_with_credentials, given_existing_data)
 
     data = {
         "projection_date": "2024-08-04 12:51",
-        "cinema_rooms": [{"name": "A1", "capacity": 100}],
+        "cinema_room": 1,
         "movie": 1,
     }
     response = api_client_with_credentials.put(
@@ -50,25 +50,6 @@ def test_can_update_projection(api_client_with_credentials, given_existing_data)
     response_data = response.data
 
     assert response_data["projection_date"] == data["projection_date"]
-    assert (
-        response_data["cinema_rooms"][0]["name"]
-        == response_data["cinema_rooms"][0]["name"]
-    )
-
-
-@pytest.mark.django_db
-def test_cinema_rooms_can_be_null(api_client_with_credentials, given_existing_data):
-
-    data = {"projection_date": "2024-10-04 12:51", "cinema_rooms": [], "movie": 1}
-
-    response = api_client_with_credentials.put(
-        path=url + "1/", data=data, format="json"
-    )
-
-    response_data = response.data
-    # print(response_data)
-
-    assert len(response_data["cinema_rooms"]) == 0
 
 
 @pytest.mark.django_db
